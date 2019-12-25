@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button onclick="clickTest()" type="button">点我</button>
+</body>
+
+<script>
+    audio = {
+        enable: true,
+        playURl: "./music/happy.wav",
+        cycleURL: "./music/circulation.wav"
+    }
+
+    function clickTest() {
+        if (audio.enable) {
+            var audio1 = Hmlt5Audio(audio.playURl);
+            audio1.end(function () {
+                Hmlt5Audio(audio.cycleURL, true)
+            })
+        }
+    }
+
+    function Hmlt5Audio(url, loop) {
+        var audio = new Audio(url);
+        audio.autoplay = true;
+        audio.loop = loop || false;
+        audio.play();
+        return {
+            end: function (callback) {
+                audio.addEventListener("ended", function () {
+                    callback()
+                }, false)
+            }
+        }
+    }
+</script>
+</html>
