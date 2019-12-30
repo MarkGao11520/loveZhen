@@ -7,7 +7,20 @@
         body{ background: #fff;margin: 0px;padding: 0;padding-top: 41px;background: url(images/1.jpg) #1c0c0f  center 0 no-repeat fixed;}
 
         .top{width: 100%;top:0px;height:41px;background-color: #001E3B;box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);position: fixed;z-index: 999;}
-        .header{height: 200px;background-color: rgba(255,255,255,.2);width: 960px;margin: 0px auto;}
+        .header
+        {
+            height: 200px;
+            background-color: rgba(255,255,255,.2);
+            width: 960px;
+            margin: 0px auto;
+            overflow: hidden;
+            text-align: center;
+        }
+        .header .header_text
+        {
+            vertical-align: middle;
+            line-height: 200px;
+        }
 
         .container{width: 960px;min-width:960px;margin: 0px auto;position: relative;}
         .hide{display: none;}
@@ -198,8 +211,10 @@
 </div>
 <!--  网页内容 -->
 
-    <div class="top"></div>
-    <div class="header"></div>
+    <!--<div class="top"></div>-->
+    <div class="header">
+        <span class="header_text"></span>
+    </div>
 
     <div class="container">
 
