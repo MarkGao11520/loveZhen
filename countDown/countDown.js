@@ -31,6 +31,7 @@ window.onload=function () {
 
 
     var curTime = new Date()
+    endTime.setFullYear(curTime.getFullYear())
     endTime.setMonth(curTime.getMonth())
     if(endTime.getTime() < curTime.getTime()){
         endTime.setMonth(endTime.getMonth() + 1)
