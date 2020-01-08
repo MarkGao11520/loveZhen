@@ -1,5 +1,20 @@
 var data = [];
 
+data.push({
+    'date'  : '2020-01-08',
+    'intro' : 'f:你好，能不能借一生说话<br>z:好呀<br>f:从现在开始，我的钱归你，你归我<br>z:我很贵的<br>f:好，那在加上我的一生',
+    'media' : '<img src="images/jietu.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+data.push({
+    'date'  : '2020-01-08',
+    'intro' : 'f:我喜欢你，像风走了八千里，不问归期<br>z:我还是很喜欢你，像飞蛾扑向烈火，乐此不疲<br>f:我的情话不多，但我爱你的每一个字都千金不换<br>z:等价交换呢<br>f:只可以用你爱我来换，但我但要比你但贵一丢丢',
+    'media' : '<img src="images/jietu1.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
 
 data.push({
     'date'  : '2019-11-21',
