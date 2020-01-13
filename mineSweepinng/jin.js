@@ -35,7 +35,7 @@
 */
 
 // 1，成一张雷的地图
-var mineSweepingMap = function (r, c, num) {
+var mineSweepingMap = function (r, c, num,exceptX,exceptY) {
     var map = []
     // 给行数，生成一个 1 维数组
     var row = function (r) {
@@ -74,7 +74,7 @@ var mineSweepingMap = function (r, c, num) {
             const iX = parseInt(j/c)
             const iY = parseInt(j%c)
 
-            const randomNumber = Math.floor(Math.random() * (j+1))
+            const randomNumber = parseInt(Math.random() * (j+1))
             const randX = parseInt(randomNumber/c)
             const randY = parseInt(randomNumber%c)
 
@@ -153,6 +153,23 @@ var mineSweepingMap = function (r, c, num) {
     }
     writeInHint()
 
+    if(exceptX >=0 && exceptY >=0 && exceptX < r && exceptY < c){
+        var reinitNum = 0
+        while (map[exceptX][exceptY] !== 0){
+            column(c)
+            if(type==1){
+                return
+            }else{
+                writeInMine(num)
+            }
+            writeInHint()
+            reinitNum++
+        }
+        // console.log("reinitNum:"+reinitNum)
+
+    }
+
+
 
     return map
 }
@@ -160,7 +177,7 @@ var mineSweepingMap = function (r, c, num) {
 // 2，将雷写入页面
 var writeHtml = function (map) {
 
-    const colWidth = calculateMineWidth()
+    const col = calculateMineWidth()
 
     // 先通过 y轴数量写入 ul，然后通过 x轴上的数量写入 li
     var x = document.querySelector('.gameBox')
@@ -176,9 +193,9 @@ var writeHtml = function (map) {
                 m = ''
             }
             z[i].innerHTML = z[i].innerHTML + `
-                <li class="col y-${j} num-${m}" data-y="${j}" style="width: ${colWidth}px;height:${colWidth}px">
+                <li class="col y-${j} num-${m}" data-y="${j}" style="width: ${col.width}px;height:${col.height}px">
                     <span>${m}</span>
-                    <img src="flag.svg" class="img-flag hide" style="width: ${colWidth}px;height:${colWidth}px">
+                    <img src="flag.svg" class="img-flag hide" style="width: ${col.width}px;height:${col.height}px">
                 </li>`
         }
     }
@@ -188,7 +205,7 @@ var writeHtml = function (map) {
 var changeClearMineNum = function (clearMineNum) {
     // console.log('zmzmzmzm');
     // console.log('zz', zz);
-    var colWidth = calculateMineWidth()
+    var colMineSize = calculateMineWidth()
     if (clearMineNum === ((col * row) - num)) {
         var all = document.querySelectorAll('.col')
         var allNum = 0
@@ -203,8 +220,8 @@ var changeClearMineNum = function (clearMineNum) {
                 all[allNum].style.background = `rgba(${r},${g},${b},0.6)`
             }else{
                 all[allNum].classList.add('boom_1')
-                all[allNum].width = colWidth
-                all[allNum].height = colWidth
+                all[allNum].width = colMineSize.width
+                all[allNum].height = colMineSize.height
             }
             // var b = Math.floor(Math.random() * 256)
 
@@ -233,12 +250,11 @@ var changeClearMineNum = function (clearMineNum) {
 
 // 3，扫雷过程
 var clearMine = function (row, col, num) {
-    var clearMineNum = 0
     var makeWhite = function (x, y) {
         if (x < row && y < col && x >= 0 && y >= 0) {
             var el = document.querySelector(`.x-${x}`).children[y]
             // 需要注意这个 ！== 'white' ，如果不加这个就会进入无限循环
-            if (el.style.background !== 'white') {
+            if (el.style.background !== 'white' && el.children[0].innerHTML!=='9') {
                 el.style.background = 'white'
                 el.children[0].style.opacity = '1'
                 el.children[1].classList.add('hide')
@@ -264,163 +280,192 @@ var clearMine = function (row, col, num) {
         makeWhite(x, y - 1)
     }
 
+    function processGameOver(el) {
+        var colMineSize = calculateMineWidth()
+// el.children[0].style.opacity = '1'
+        zz = 1
+        el.classList.add('boom')
+        el.width = colMineSize.width
+        el.height = colMineSize.height
+        alert('傻子！重来')
+        if (type == 0 || '20191107' == prompt("想查看答案吗？请输入密码", "")) {
+            // 暂时注释
+            var all = document.querySelectorAll('.col')
+            var ff = []
+            var allNum = 0
+            // 这里做了个小动画，失败的时候慢慢的显示雷的位置
+            for (var i = 0; i < all.length; i++) {
+                if (all[i].children[0].innerText === '9') {
+                    // all[i].style.background = 'red'
+                    ff[allNum] = all[i]
+                    allNum++
+                }
+            }
+            allNum = 0
+            var time = 60
+            if (num > 50) {
+                time = 10
+            } else if (num > 10) {
+                time = 25
+            }
+            var stop = setInterval(function () {
+                ff[allNum].classList.add('boom')
+                ff[allNum].width = colMineSize.width
+                ff[allNum].height = colMineSize.height
+                allNum++
+                if (allNum === ff.length) {
+                    clearInterval(stop)
+                    // console.log('stop');
+                }
+            }, time)
+        }
+
+
+        // 已经废弃
+        // var box = document.querySelector('.gameBox')
+        // box.innerHTML = ''
+        // var level = event.target.innerHTML
+        // var body = document.querySelector('body')
+        // initializeGame(row, col, num)
+    }
+
+    function autoExpand(el) {
+        var colMineSize = calculateMineWidth()
+        const arr = [[-1, 1], [-1, -1], [-1, 0], [1, 1], [1, -1], [1, 0], [0, 1], [0, -1]]
+        const x = parseInt(el.parentElement.dataset.x)
+        const y = parseInt(el.dataset.y)
+        var mineNum = 0;
+        // 计算已经扫出的雷
+        for (i = 0; i < arr.length; i++) {
+            const nextX = x + arr[i][0]
+            const nextY = y + arr[i][1]
+            if (nextX < row && nextY < col && nextX >= 0 && nextY >= 0) {
+                var nextEl = document.querySelector(`.x-${nextX}`).children[nextY]
+                var nextClassList = nextEl.children[1].classList
+                if (!nextClassList.contains('hide') && nextEl.style.background !== 'white') {
+                    mineNum++;
+                }
+            }
+        }
+        // 如果扫出的雷和标记的相等，则自动展开周边的格子
+        if (mineNum == parseInt(el.children[0].innerText)) {
+            for (i = 0; i < arr.length; i++) {
+                const nextX = x + arr[i][0]
+                const nextY = y + arr[i][1]
+                if (nextX < row && nextY < col && nextX >= 0 && nextY >= 0) {
+                    var nextEl = document.querySelector(`.x-${nextX}`).children[nextY]
+                    var nextClassList = nextEl.children[1].classList
+                    if (!nextClassList.contains('hide') && nextEl.children[0].innerText !== '9' && nextEl.style.background !== 'white') {
+                        zz = 1
+                        nextEl.classList.add('boom')
+                        nextEl.width = colMineSize.width
+                        nextEl.height = colMineSize.height
+                        alert('傻子！重来')
+                    }
+                    else if (nextEl.children[0].innerText !== '9' && nextEl.style.background !== 'white') {
+                        nextEl.children[0].style.opacity = '1'
+                        nextEl.style.background = 'white'
+                        clearMineNum++
+                        changeClearMineNum(clearMineNum)
+                    }
+                }
+            }
+        }
+    }
+
+    // 点击事件
+    var clickEvent =  function (event) {
+
+        if(type==0 && 0!=zz){
+            return
+        }
+        var el = event.target
+        if (el.tagName != 'LI') {
+            // 因为事件委托的原因
+            // 如果点击到了 span 上面，那么就会出现 bug
+            // 所以如果点击到 span 上面，那么 el 就等于 span 的父节点
+            el = event.target.parentElement
+        }
+        if(1 == isFirst && type == 0){
+            var x = parseInt(el.parentElement.dataset.x)
+            var y = parseInt(el.dataset.y)
+
+            // console.log("x="+x+",y="+y)
+            initializeGame(row,col,num,x,y)
+
+            el  = document.querySelector(`.x-${x}`).children[y]
+
+            isFirst = 0
+        }
+        if (el.tagName != 'LI') {
+            // 因为事件委托的原因
+            // 如果点击到了 span 上面，那么就会出现 bug
+            // 所以如果点击到 span 上面，那么 el 就等于 span 的父节点
+            el = event.target.parentElement
+        }
+        // 已经被标记的不能点击
+        var flag = el.children[1].classList.contains('hide')
+        if (el.tagName === 'LI' && flag) {
+            if (el.children[0].innerText !== '9' && el.style.background !== 'white') {
+                el.children[0].style.opacity = '1'
+                el.style.background = 'white'
+                clearMineNum++
+                changeClearMineNum(clearMineNum)
+                // console.log(clearMineNum, 'clearMineNum');
+            }
+            else if (el.children[0].innerText === '9') {
+                processGameOver(el);
+            }
+            else{
+                // 如果一个格子旁边的雷已经标记完毕，点击可以自动点开周围的格子
+                autoExpand(el);
+            }
+            // 如果点击的方格为空（什么有没有），那么周围没有点开的空方格都会被点开
+            if (el.children[0].innerText === '') {
+                // 获取到位置
+                var x = parseInt(el.parentElement.dataset.x)
+                var y = parseInt(el.dataset.y)
+                // console.log(x,y, 'data');
+                // 背景变成白色
+                showNoMine(x, y)
+            }
+        }
+    }
+
+    // 右键插旗子事件
+    var contextmenuEvent = function (event) {
+        event.preventDefault();
+        var btnNum = event.button
+        var el = event.target
+        if (el.tagName != 'LI') {
+            // 因为事件委托的原因
+            // 如果点击到了 span 上面，那么就会出现 bug
+            // 所以如果点击到 span 上面，那么 el 就等于 span 的父节点
+            el = event.target.parentElement
+        }
+        if (el.tagName === 'LI') {
+            var classList = el.children[1].classList
+            // 已经被点击过的地方不能标记
+            if (classList.contains('hide') && el.style.background !== 'white') {
+                var residue = document.querySelector('.residue')
+                if (num !== 0) {
+                    num--
+                }
+                residue.innerText = `${num}`
+                classList.remove('hide')
+            } else if (el.style.background !== 'white') {
+                classList.add('hide')
+            }
+        }
+    }
+
     // 给所有方块绑定点击事件，点击显示数字，或者 boom
     var show = function () {
         // var x = document.querySelectorAll('.col')
         var x = document.querySelectorAll('.row')
-        var colWidth = calculateMineWidth()
         for (var i = 0; i < x.length; i++) {
-            x[i].addEventListener('click', function (event) {
-                if(type==0 && 0!=zz){
-                    return
-                }
-                var el = event.target
-                if (el.tagName != 'LI') {
-                    // 因为事件委托的原因
-                    // 如果点击到了 span 上面，那么就会出现 bug
-                    // 所以如果点击到 span 上面，那么 el 就等于 span 的父节点
-                    el = event.target.parentElement
-                }
-                // 已经被标记的不能点击
-                var flag = el.children[1].classList.contains('hide')
-                if (el.tagName === 'LI' && flag) {
-                    if (el.children[0].innerText !== '9' && el.style.background !== 'white') {
-                        el.children[0].style.opacity = '1'
-                        el.style.background = 'white'
-                        clearMineNum++
-                        changeClearMineNum(clearMineNum)
-                        // console.log(clearMineNum, 'clearMineNum');
-                    }
-                    else if (el.children[0].innerText === '9') {
-                        // el.children[0].style.opacity = '1'
-                        zz = 1
-                        el.classList.add('boom')
-                        el.width = colWidth
-                        el.height = colWidth
-                        alert('傻子！重来')
-                        if (type == 0 || '20191107' == prompt("想查看答案吗？请输入密码", "")) {
-                            // 暂时注释
-                            var all = document.querySelectorAll('.col')
-                            var ff = []
-                            var allNum = 0
-                            // 这里做了个小动画，失败的时候慢慢的显示雷的位置
-                            for (var i = 0; i < all.length; i++) {
-                                if (all[i].children[0].innerText === '9') {
-                                    // all[i].style.background = 'red'
-                                    ff[allNum] = all[i]
-                                    allNum++
-                                }
-                            }
-                            allNum = 0
-                            var time = 60
-                            if (num > 50) {
-                                time = 10
-                            } else if (num > 10) {
-                                time = 25
-                            }
-                            var stop = setInterval(function () {
-                                ff[allNum].classList.add('boom')
-                                ff[allNum].width = colWidth
-                                ff[allNum].height = colWidth
-                                allNum++
-                                if (allNum === ff.length) {
-                                    clearInterval(stop)
-                                    // console.log('stop');
-                                }
-                            }, time)
-                        }
-
-
-
-                        // 已经废弃
-                        // var box = document.querySelector('.gameBox')
-                        // box.innerHTML = ''
-                        // var level = event.target.innerHTML
-                        // var body = document.querySelector('body')
-                        // initializeGame(row, col, num)
-                    }
-                    else{
-                        // 如果一个格子旁边的雷已经标记完毕，点击可以自动点开周围的格子
-                        const arr = [[-1,1],[-1,-1],[-1,0],[1,1],[1,-1],[1,0],[0,1],[0,-1]]
-                        const x = parseInt(el.parentElement.dataset.x)
-                        const y = parseInt(el.dataset.y)
-                        var mineNum = 0;
-                        // 计算已经扫出的雷
-                        for (i = 0;i<arr.length;i++){
-                            const nextX = x+arr[i][0]
-                            const nextY = y+arr[i][1]
-                            if (nextX < row && nextY < col && nextX >= 0 && nextY >= 0) {
-                                var nextEl = document.querySelector(`.x-${nextX}`).children[nextY]
-                                var nextClassList = nextEl.children[1].classList
-                                if(!nextClassList.contains('hide') && nextEl.style.background !== 'white'){
-                                    mineNum++;
-                                }
-                            }
-                        }
-                        // 如果扫出的雷和标记的相等，则自动展开周边的格子
-                        if(mineNum == parseInt(el.children[0].innerText)){
-                            for (i = 0;i<arr.length;i++){
-                                const nextX = x+arr[i][0]
-                                const nextY = y+arr[i][1]
-                                if (nextX < row && nextY < col && nextX >= 0 && nextY >= 0) {
-                                    var nextEl = document.querySelector(`.x-${nextX}`).children[nextY]
-                                    var nextClassList = nextEl.children[1].classList
-                                    if(!nextClassList.contains('hide') && nextEl.children[0].innerText !== '9' && nextEl.style.background !== 'white'){
-                                        zz = 1
-                                        nextEl.classList.add('boom')
-                                        nextEl.width = colWidth
-                                        nextEl.height = colWidth
-                                        alert('傻子！重来')
-                                    }
-                                    else if (nextEl.children[0].innerText !== '9' && nextEl.style.background !== 'white') {
-                                        nextEl.children[0].style.opacity = '1'
-                                        nextEl.style.background = 'white'
-                                        clearMineNum++
-                                        changeClearMineNum(clearMineNum)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // 如果点击的方格为空（什么有没有），那么周围没有点开的空方格都会被点开
-                    if (el.children[0].innerText === '') {
-                        // 获取到位置
-                        var x = parseInt(el.parentElement.dataset.x)
-                        var y = parseInt(el.dataset.y)
-                        // console.log(x,y, 'data');
-                        // 背景变成白色
-                        showNoMine(x, y)
-                    }
-                }
-            })
-        }
-        for (var i = 0; i < x.length; i++) {
-            var mineNum = num
-            x[i].addEventListener('contextmenu', function (event) {
-                event.preventDefault();
-                var btnNum = event.button
-                var el = event.target
-                if (el.tagName != 'LI') {
-                    // 因为事件委托的原因
-                    // 如果点击到了 span 上面，那么就会出现 bug
-                    // 所以如果点击到 span 上面，那么 el 就等于 span 的父节点
-                    el = event.target.parentElement
-                }
-                if (el.tagName === 'LI') {
-                    var classList = el.children[1].classList
-                    // 已经被点击过的地方不能标记
-                    if (classList.contains('hide') && el.style.background !== 'white') {
-                        var residue = document.querySelector('.residue')
-                        if (mineNum !== 0) {
-                            mineNum--
-                        }
-                        residue.innerText = `${mineNum}`
-                        classList.remove('hide')
-                    } else if (el.style.background !== 'white') {
-                        classList.add('hide')
-                    }
-                }
-            })
+            x[i].addEventListener('click',clickEvent)
+            x[i].addEventListener('contextmenu', contextmenuEvent)
         }
     }
     show()
@@ -428,7 +473,7 @@ var clearMine = function (row, col, num) {
 
 // 4，清除画面，然后写入新的画面
 var stopTime
-var initializeGame = function (row, col, num) {
+var initializeGame = function (row, col, num,exceptX,exceptY) {
     var residue = document.querySelector('.residue')
     residue.innerText = `${num}`
     var time = document.querySelector('.tick')
@@ -439,15 +484,17 @@ var initializeGame = function (row, col, num) {
         time.innerText = `${i++}`
     }, 1000)
     // zz
-    zz = 0
+    zz = 0;
+    isFirst = 1;
     // 首先清除原来的地图，然后重新初始化
     var box = document.querySelector('.gameBox')
     box.innerHTML = ''
     var body = document.querySelector('body')
     body.style.minWidth = `${27 * col}px`
-    var map = mineSweepingMap(row, col, num)
+    var map = mineSweepingMap(row, col, num,exceptX,exceptY)
     writeHtml(map)
     clearMine(row, col, num)
+    clearMineNum = 0
 }
 
 // 5，选择游戏等级，给按钮绑定功能
@@ -490,9 +537,11 @@ var Btn = function () {
 }
 
 var calculateMineWidth = function(){
-    console.log("window.innerWidth:"+window.innerWidth+",window.innerHeight:"+window.innerHeight+",level.clientHeight:"+document.querySelector(".level").clientHeight)
-    var fullWidth = window.innerHeight - document.querySelector(".level").clientHeight
-    return fullWidth * 0.85/ row
+    var height = (window.innerHeight - document.querySelector(".level").clientHeight) * 0.85/ row
+    var width = window.innerWidth *0.85/col
+    width = width >= height / 0.8 ? height / 0.8 : width
+    // console.log("width="+width+",height="+height)
+    return {width:width,height:height}
 }
 Btn()
 
@@ -502,8 +551,12 @@ var zz = 0
 row = 16
 col = 16
 num = 40
+var isFirst = 1
 // type 表示是否只为周周
 var type = 0
+var mineArray = []
+var clearMineNum = 0
+
 initializeGame(row, col, num)
 
 // 给一个坐标，把四周变成白色

@@ -39,9 +39,10 @@ body {
 }
 
 .col span {
+    text-align:center;
     display: inline-block;
     position: relative;
-    top: 2px;
+    top: 4px;
     opacity: 0;
     font-weight: bold;
     /* 标准箭头 */
