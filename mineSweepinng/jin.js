@@ -159,6 +159,9 @@ var mineSweepingMap = function (r, c, num) {
 
 // 2，将雷写入页面
 var writeHtml = function (map) {
+
+    const colWidth = calculateMineWidth()
+
     // 先通过 y轴数量写入 ul，然后通过 x轴上的数量写入 li
     var x = document.querySelector('.gameBox')
     for (var i = 0; i < map.length; i++) {
@@ -173,9 +176,9 @@ var writeHtml = function (map) {
                 m = ''
             }
             z[i].innerHTML = z[i].innerHTML + `
-                <li class="col y-${j} num-${m}" data-y="${j}">
+                <li class="col y-${j} num-${m}" data-y="${j}" style="width: ${colWidth}px;height:${colWidth}px">
                     <span>${m}</span>
-                    <img src="flag.svg" class="img-flag hide">
+                    <img src="flag.svg" class="img-flag hide" style="width: ${colWidth}px;height:${colWidth}px">
                 </li>`
         }
     }
@@ -185,6 +188,7 @@ var writeHtml = function (map) {
 var changeClearMineNum = function (clearMineNum) {
     // console.log('zmzmzmzm');
     // console.log('zz', zz);
+    var colWidth = calculateMineWidth()
     if (clearMineNum === ((col * row) - num)) {
         var all = document.querySelectorAll('.col')
         var allNum = 0
@@ -199,6 +203,8 @@ var changeClearMineNum = function (clearMineNum) {
                 all[allNum].style.background = `rgba(${r},${g},${b},0.6)`
             }else{
                 all[allNum].classList.add('boom_1')
+                all[allNum].width = colWidth
+                all[allNum].height = colWidth
             }
             // var b = Math.floor(Math.random() * 256)
 
@@ -262,6 +268,7 @@ var clearMine = function (row, col, num) {
     var show = function () {
         // var x = document.querySelectorAll('.col')
         var x = document.querySelectorAll('.row')
+        var colWidth = calculateMineWidth()
         for (var i = 0; i < x.length; i++) {
             x[i].addEventListener('click', function (event) {
                 if(type==0 && 0!=zz){
@@ -288,6 +295,8 @@ var clearMine = function (row, col, num) {
                         // el.children[0].style.opacity = '1'
                         zz = 1
                         el.classList.add('boom')
+                        el.width = colWidth
+                        el.height = colWidth
                         alert('傻子！重来')
                         if (type == 0 || '20191107' == prompt("想查看答案吗？请输入密码", "")) {
                             // 暂时注释
@@ -311,6 +320,8 @@ var clearMine = function (row, col, num) {
                             }
                             var stop = setInterval(function () {
                                 ff[allNum].classList.add('boom')
+                                ff[allNum].width = colWidth
+                                ff[allNum].height = colWidth
                                 allNum++
                                 if (allNum === ff.length) {
                                     clearInterval(stop)
@@ -357,6 +368,8 @@ var clearMine = function (row, col, num) {
                                     if(!nextClassList.contains('hide') && nextEl.children[0].innerText !== '9' && nextEl.style.background !== 'white'){
                                         zz = 1
                                         nextEl.classList.add('boom')
+                                        nextEl.width = colWidth
+                                        nextEl.height = colWidth
                                         alert('傻子！重来')
                                     }
                                     else if (nextEl.children[0].innerText !== '9' && nextEl.style.background !== 'white') {
@@ -474,6 +487,12 @@ var Btn = function () {
     restart.addEventListener('click', function (event) {
         initializeGame(row, col, num)
     })
+}
+
+var calculateMineWidth = function(){
+    console.log("window.innerWidth:"+window.innerWidth+",window.innerHeight:"+window.innerHeight+",level.clientHeight:"+document.querySelector(".level").clientHeight)
+    var fullWidth = window.innerHeight - document.querySelector(".level").clientHeight
+    return fullWidth * 0.85/ row
 }
 Btn()
 
