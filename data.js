@@ -1,22 +1,6 @@
 var data = [];
 
 data.push({
-    'date'  : '2020-01-08',
-    'intro' : 'f:你好，能不能借一生说话<br>z:好呀<br>f:从现在开始，我的钱归你，你归我<br>z:我很贵的<br>f:好，那在加上我的一生',
-    'media' : '<img src="images/jietu.jpg" width="370">',
-    'like' : 25038,
-    'comment' : 883
-})
-
-data.push({
-    'date'  : '2020-01-08',
-    'intro' : 'f:我喜欢你，像风走了八千里，不问归期<br>z:我还是很喜欢你，像飞蛾扑向烈火，乐此不疲<br>f:我的情话不多，但我爱你的每一个字都千金不换<br>z:等价交换呢<br>f:只可以用你爱我来换，但我的要比你的贵一丢丢<br>z:让着你',
-    'media' : '<img src="images/jietu1.jpg" width="370">',
-    'like' : 25038,
-    'comment' : 883
-})
-
-data.push({
     'date'  : '2019-11-21',
     'intro' : '那时你说你特别喜欢玩扫雷，我灵机一动，做了一款只属于你的扫雷>><a href="mineSweepinng/index.html">点这里</a>',
     'media' : '<img src="images/saolei.jpg" width="370">',
@@ -47,4 +31,52 @@ data.push({
     'media' : '<img src="images/flower.jpg" width="370" >',
     'like' : 25038,
     'comment' : 417
+})
+
+data.push({
+    'date'  : '2020-01-08',
+    'intro' : 'f:你好，能不能借一生说话<br>z:好呀<br>f:从现在开始，我的钱归你，你归我<br>z:我很贵的<br>f:好，那在加上我的一生',
+    'media' : '<img src="images/jietu.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+data.push({
+    'date'  : '2020-01-08',
+    'intro' : 'f:我喜欢你，像风走了八千里，不问归期<br>z:我还是很喜欢你，像飞蛾扑向烈火，乐此不疲<br>f:我的情话不多，但我爱你的每一个字都千金不换<br>z:等价交换呢<br>f:只可以用你爱我来换，但我的要比你的贵一丢丢<br>z:让着你',
+    'media' : '<img src="images/jietu1.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+data.push({
+    'date'  : '2020-03-07',
+    'intro' : '我们在一起的第四个月纪念日，给你准备了一份超美的烛光晚餐，17层外面夜色也超级美',
+    'media' : '<img src="images/20200307-1.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+data.push({
+    'date'  : '2020-03-07',
+    'intro' : '你说，这张照片拍出了明星即视感，抱着不撒手，突然发现男朋友好帅呀～哼，我一直都很帅！',
+    'media' : '<img src="images/20200307-2.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+data.push({
+    'date'  : '2020-03-21',
+    'intro' : '小姐姐说，所有的女生都羡慕周珍的样子，左手程序员小姐姐，右手程序员小哥哥，想吃什么就吃什么，想去哪玩就去哪玩',
+    'media' : '<img src="images/20200321-1.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+data.push({
+    'date'  : '2020-03-21',
+    'intro' : '我是你的小太阳呀～',
+    'media' : '<img src="images/2020-0321-2.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
 })
