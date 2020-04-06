@@ -80,3 +80,20 @@ data.push({
     'like' : 25038,
     'comment' : 883
 })
+
+data.push({
+    'date'  : '2020-03-31',
+    'intro' : '聪明的男孩子如何哄女孩子呢？',
+    'media' : '<img src="images/20200331-1.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+data.push({
+    'date'  : '2020-03-31',
+    'intro' : '女孩子嘛，什么时候都需要甜言蜜语的',
+    'media' : '<img src="images/20200331-2.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
