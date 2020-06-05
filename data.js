@@ -77,7 +77,7 @@ data.push({
 data.push({
     'date'  : '2020-04-07',
     'intro' : '某人嫌弃我做的<a href="forever/index.html">网页</a>非主流，哼~',
-    'media' : '<img src="images/20200321-1.jpg" width="370">',
+    'media' : '<img src="images/20200407.jpg" width="370">',
     'like' : 25038,
     'comment' : 883
 })
