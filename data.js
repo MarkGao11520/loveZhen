@@ -82,6 +82,24 @@ data.push({
     'comment' : 883
 })
 
+data.push({
+    'date'  : '2020-05-07',
+    'intro' : '我们在一起半年啦，记得你说过从没有买过戒指，因为第一枚戒指应该让男朋友来送<br>' +
+        '嘿嘿，成全你',
+    'media' : '<img src="images/20200507.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
+
+data.push({
+    'date'  : '2020-06-07',
+    'intro' : '时隔两月，最新力作，以框架构造<a href="seven/index.html">爱你</a>、视觉体验、响应式为核心制作，只为最美的你~',
+    'media' : '<img src="images/20200607.jpg" width="370">',
+    'like' : 25038,
+    'comment' : 883
+})
+
 // data.push({
 //     'date'  : '2020-03-21',
 //     'intro' : '我是你的小太阳呀～',
